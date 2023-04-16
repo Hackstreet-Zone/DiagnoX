@@ -8,6 +8,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+bin/
 build/
 develop-eggs/
 dist/
@@ -127,6 +128,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+pyvenv.cfg
 
 # Spyder project settings
 .spyderproject
@@ -189,5 +191,10 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+<<<<<<< HEAD
 # Data files
 images/
+=======
+# ignore tmp files
+tmp/
+>>>>>>> 4c2fd1b2459009a2519bbbf53a2aef81ed12ee60
