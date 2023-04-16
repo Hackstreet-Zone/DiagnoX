@@ -31,19 +31,19 @@ DiagnoX is designed to be highly user-friendly, with a simple interface that can
 - Easy to understand Minimilastic and Interactive UI/UX Design 
 
 ## Proposed Approach:
-<img src="https://github.com/Hackstreet-Zone/DiagnoX-FrontEnd/blob/main/mockups/architecture.jpeg" >
+<img src="mockups/architecture.jpeg" >
 
 
 ## Mockups
 <table>
     <tr>
-        <td><img src="https://github.com/Hackstreet-Zone/DiagnoX-FrontEnd/blob/main/mockups/1.png"></td>
-        <td><img src="https://github.com/Hackstreet-Zone/DiagnoX-FrontEnd/blob/main/mockups/2.png"></td>
+        <td><img src="mockups/1.png"></td>
+        <td><img src="mockups/2.png"></td>
     </tr>
     <tr>
-        <td><img src="https://github.com/Hackstreet-Zone/DiagnoX-FrontEnd/blob/main/mockups/3.png"></td>
-        <td><img src="https://github.com/Hackstreet-Zone/DiagnoX-FrontEnd/blob/main/mockups/4.png"></td>
-        <td><img src="https://github.com/Hackstreet-Zone/DiagnoX-FrontEnd/blob/main/mockups/5.png"></td>
+        <td><img src="mockups/3.png"></td>
+        <td><img src="mockups/4.png"></td>
+        <td><img src="mockups/5.png"></td>
     </tr>
 </table>
 
