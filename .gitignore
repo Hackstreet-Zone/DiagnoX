@@ -195,3 +195,4 @@ Temporary Items
 images/
 # ignore tmp files
 tmp/
+share/
