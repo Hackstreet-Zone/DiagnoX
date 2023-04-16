@@ -4,22 +4,32 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from keras import backend as K
-from tensorflow.keras.utils import load_img
+from tensorflow.keras.utils import load_img, img_to_array
 from sklearn.metrics import roc_auc_score, roc_curve
 from tensorflow.compat.v1.logging import INFO, set_verbosity
 import os
 
 random.seed(a=None, version=2)
-
 set_verbosity(INFO)
 
 
-def load_image(img, image_dir, df, preprocess=False):
+def get_mean_std_per_batch(image_dir, df, H=320, W=320):
+    sample_data = []
+    for img in df.sample(100)["Image"].values:
+        image_path = os.path.join(image_dir, img)
+        sample_data.append(
+            np.array(load_img(image_path, target_size=(H, W))))
+    mean = np.mean(sample_data, axis=(0, 1, 2, 3))
+    std = np.std(sample_data, axis=(0, 1, 2, 3), ddof=1)
+    return mean, std
+
+
+def load_image(img, image_dir, df, preprocess=True, H=320, W=320):
     """Load and preprocess image."""
+    mean, std = get_mean_std_per_batch(image_dir, df, H=H, W=W)
     img_path = os.path.join(image_dir, img)
-    x = load_img(img_path)
-    x = tf.keras.utils.img_to_array(x)
-    x = np.array([x])
+    x = load_img(img_path, target_size=(H, W))
+    x = img_to_array(x)
     if preprocess:
         x -= mean
         x /= std
@@ -49,29 +59,33 @@ def grad_cam(input_model, image, cls, layer_name, H=320, W=320):
 
 
 def compute_gradcam(model, img, image_dir, df, labels, selected_labels,
-                    layer_name='bn'):
+                    predictions, layer_name='bn'):
     preprocessed_input = load_image(img, image_dir, df)
-    predictions = model.predict(preprocessed_input)
 
     print("Loading original image")
-    plt.figure(figsize=(15, 10))
-    plt.subplot(151)
+    plt.figure(figsize=(30, 50))
+    plt.subplot(15,1,1)
     plt.title("Original")
     plt.axis('off')
-    plt.imshow(load_image(img, image_dir, df, preprocess=False), cmap='gray')
+    tmp = load_image(img, image_dir, df, preprocess=False)
+    tmp = tmp.astype(np.uint8)
+    plt.imshow(tmp, cmap='gray')
 
     j = 1
     for i in range(len(labels)):
         if labels[i] in selected_labels:
             print(f"Generating gradcam for class {labels[i]}")
             gradcam = grad_cam(model, preprocessed_input, i, layer_name)
-            plt.subplot(151 + j)
+            plt.subplot(15,1,j+1)
             plt.title(f"{labels[i]}: p={predictions[0][i]:.3f}")
             plt.axis('off')
-            plt.imshow(load_image(img, image_dir, df, preprocess=False),
+            tmp = load_image(img, image_dir, df, preprocess=False)
+            tmp = tmp.astype(np.uint8)
+            plt.imshow(tmp,
                        cmap='gray')
             plt.imshow(gradcam, cmap='jet', alpha=min(0.5, predictions[0][i]))
             j += 1
+    plt.savefig(os.path.join('output', img),  bbox_inches='tight')
 
 
 def get_roc_curve(labels, predicted_vals, generator):
