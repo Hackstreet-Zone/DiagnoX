@@ -190,3 +190,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# ignore tmp files
+tmp/
