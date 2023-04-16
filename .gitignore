@@ -191,10 +191,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-<<<<<<< HEAD
 # Data files
 images/
-=======
 # ignore tmp files
 tmp/
->>>>>>> 4c2fd1b2459009a2519bbbf53a2aef81ed12ee60
