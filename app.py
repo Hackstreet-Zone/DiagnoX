@@ -9,6 +9,10 @@ import numpy as np
 
 from flask import Flask, request, jsonify, render_template
 from werkzeug.utils import secure_filename
+from flask_cors import CORS, cross_origin
+app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 model = get_model()
 app = Flask(__name__)
@@ -22,6 +26,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/predict', methods=['POST'])
+@cross_origin()
 def predict():
     global model
     if 'user_file' not in request.files:
