@@ -37,7 +37,7 @@ def predict():
     input_arr = np.array([input_arr])
     predictions = model.predict(input_arr)
 
-    compute_gradcam(model, filename, IMAGE_DIR, df, labels, labels_to_show, predictions=prediction, layer_name='bn')
+    compute_gradcam(model, filename, app.config['UPLOAD_FOLDER'], df, labels, labels_to_show, predictions=prediction, layer_name='bn')
     upload_url = upload_file(filename)
     return jsonify({'url': upload_url, predictions: prediction}), 200
 
