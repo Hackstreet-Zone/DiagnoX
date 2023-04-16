@@ -192,7 +192,7 @@ Temporary Items
 .apdisk
 
 # Data files
-images/
+data/images/
 # ignore tmp files
 tmp/
 share/

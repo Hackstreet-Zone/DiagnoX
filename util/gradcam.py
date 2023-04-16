@@ -12,11 +12,44 @@ import os
 random.seed(a=None, version=2)
 set_verbosity(INFO)
 
+labels = ['Cardiomegaly',
+          'Emphysema',
+          'Effusion',
+          'Hernia',
+          'Infiltration',
+          'Mass',
+          'Nodule',
+          'Atelectasis',
+          'Pneumothorax',
+          'Pleural_Thickening',
+          'Pneumonia',
+          'Fibrosis',
+          'Edema',
+          'Consolidation']
 
-def get_mean_std_per_batch(image_dir, df, H=320, W=320):
+auc_rocs = [ 0.896108108108108,
+ 0.7963598901098901,
+ 0.7620173769986118,
+ 0.7741081081081082,
+ 0.6515798863796423,
+ 0.8193055555555556,
+ 0.6556871078729002,
+ 0.7857407407407407,
+ 0.8020921544209215,
+ 0.7115164793293961,
+ 0.6775135135135135,
+ 0.7282980958034613,
+ 0.856054054054054,
+ 0.7516323068222713
+]
+
+IMAGE_DIR = "data/images/"
+
+
+def get_mean_std_per_batch(image_dir, data_dir, df, H=320, W=320):
     sample_data = []
     for img in df.sample(100)["Image"].values:
-        image_path = os.path.join(image_dir, img)
+        image_path = os.path.join(data_dir, img)
         sample_data.append(
             np.array(load_img(image_path, target_size=(H, W))))
     mean = np.mean(sample_data, axis=(0, 1, 2, 3))
@@ -24,9 +57,9 @@ def get_mean_std_per_batch(image_dir, df, H=320, W=320):
     return mean, std
 
 
-def load_image(img, image_dir, df, preprocess=True, H=320, W=320):
+def load_image(img, image_dir, data_dir, df, preprocess=True, H=320, W=320):
     """Load and preprocess image."""
-    mean, std = get_mean_std_per_batch(image_dir, df, H=H, W=W)
+    mean, std = get_mean_std_per_batch(image_dir, data_dir, df, H=H, W=W)
     img_path = os.path.join(image_dir, img)
     x = load_img(img_path, target_size=(H, W))
     x = img_to_array(x)
@@ -58,18 +91,21 @@ def grad_cam(input_model, image, cls, layer_name, H=320, W=320):
     return cam
 
 
-def compute_gradcam(model, img, image_dir, df, labels, selected_labels,
+def compute_gradcam(model, img, image_dir, data_dir, df, labels, selected_labels,
                     predictions, layer_name='bn'):
-    preprocessed_input = load_image(img, image_dir, df)
+    global labels_to_show
+    global auc_rocs
+    preprocessed_input = load_image(img, image_dir, data_dir, df)
 
     print("Loading original image")
     plt.figure(figsize=(30, 50))
     plt.subplot(15,1,1)
     plt.title("Original")
     plt.axis('off')
-    tmp = load_image(img, image_dir, df, preprocess=False)
+    tmp = load_image(img, image_dir, data_dir, df, preprocess=False)
     tmp = tmp.astype(np.uint8)
     plt.imshow(tmp, cmap='gray')
+    # plt.close(tmp)
 
     j = 1
     for i in range(len(labels)):
@@ -79,13 +115,13 @@ def compute_gradcam(model, img, image_dir, df, labels, selected_labels,
             plt.subplot(15,1,j+1)
             plt.title(f"{labels[i]}: p={predictions[0][i]:.3f}")
             plt.axis('off')
-            tmp = load_image(img, image_dir, df, preprocess=False)
+            tmp = load_image(img, image_dir, data_dir, df, preprocess=False)
             tmp = tmp.astype(np.uint8)
-            plt.imshow(tmp,
-                       cmap='gray')
+            # plt.close(tmp)
+            plt.imshow(tmp, cmap='gray')
             plt.imshow(gradcam, cmap='jet', alpha=min(0.5, predictions[0][i]))
             j += 1
-    plt.savefig(os.path.join('output', img),  bbox_inches='tight')
+    plt.savefig(os.path.join('outputs', img),  bbox_inches='tight')
 
 
 def get_roc_curve(labels, predicted_vals, generator):
