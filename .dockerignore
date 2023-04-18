@@ -1,0 +1,11 @@
+# ignore tmp dir
+tmp/
+templates/
+uploads/**
+outputs/**
+bin/
+lib/
+share/
+include/
+mockups/
+
