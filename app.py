@@ -27,7 +27,7 @@ app = Flask(__name__)
 app.secret_key = "DiagnoX"
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['OUTPUT_FOLDER'] = 'outputs'
-app.config['DATA_FOLDER'] = 'data/images'
+# app.config['DATA_FOLDER'] = 'data/images'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 @app.route('/')
@@ -59,7 +59,7 @@ def predict():
         model = get_model()
         model._make_predict_function()
         predictions = model.predict(input_arr)
-        compute_gradcam(model, filename, app.config['UPLOAD_FOLDER'], app.config['DATA_FOLDER'], df, labels, labels_to_show, predictions=predictions, layer_name='bn')
+        compute_gradcam(model, filename, app.config['UPLOAD_FOLDER'], df, labels, labels_to_show, predictions=predictions, layer_name='bn')
 
 
     upload_url = upload_file(os.path.join(app.config['OUTPUT_FOLDER'], filename))
