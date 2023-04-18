@@ -196,4 +196,7 @@ Temporary Items
 data/images/
 # ignore tmp files
 tmp/
-share/
+
+# run data
+outputs/**
+uploads/**
